@@ -18,12 +18,11 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 LIGHT_BLUE = (173, 216, 230)  # Light color for moved items
 
+
+goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
 # Initialize screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Grid Iterations")
-
-
-
 
 
 def find_blank(state):
@@ -65,18 +64,23 @@ def solve_8_puzzle_bfs(initial_state, goal_state):
     return None
 
 
-def draw_grid(state, moved_indices=None):
+def draw_grid(state, goal_state, moved_indices=None):
     screen.fill(WHITE)  # Fill the screen with white background
     
     for i in range(GRID_SIZE):
         for j in range(GRID_SIZE):
             # Get position of the cell
             x, y = j * CELL_SIZE, i * CELL_SIZE
-            # Highlight the moved items
-            if moved_indices and (i, j) in moved_indices:
-                color = LIGHT_BLUE
+            
+            # Check if the current tile is in the correct position
+            if state[i][j] == goal_state[i][j]:
+                color = GREEN  # Correct position
+            elif state[i][j] == 0:
+                color = LIGHT_BLUE  # Blank space
+            elif moved_indices and (i, j) in moved_indices:
+                color = RED  # Moved tile
             else:
-                color = BLUE
+                color = BLUE  # Incorrectly placed tile
 
             pygame.draw.rect(screen, color, (x, y, CELL_SIZE, CELL_SIZE))  # Draw cell
             # Draw the number in the center of the cell
@@ -85,6 +89,7 @@ def draw_grid(state, moved_indices=None):
             screen.blit(text, (x + CELL_SIZE // 3, y + CELL_SIZE // 3))
 
     pygame.display.update()
+
     
 def show_iterations(iterations):
     prev_state = None  # Keep track of the previous state for coloring
@@ -97,7 +102,7 @@ def show_iterations(iterations):
                     if prev_state[i][j] != iteration[i][j]:
                         moved_indices.append((i, j))
 
-        draw_grid(iteration, moved_indices)
+        draw_grid(iteration, goal_state, moved_indices)
         prev_state = iteration
         time.sleep(1 / FPS)  # Control the speed of iteration change
         
@@ -110,24 +115,25 @@ def show_iterations(iterations):
 
 
 # Example usage:
-initial = random.sample(range(9), 9)
-initial_state = [initial[i * 3:(i + 1) * 3] for i in range(3)]
-goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+def main():
+    initial = random.sample(range(9), 9)
+    initial_state = [initial[i * 3:(i + 1) * 3] for i in range(3)]
+    
 
-solution_path = solve_8_puzzle_bfs(initial_state, goal_state)
+    solution_path = solve_8_puzzle_bfs(initial_state, goal_state)
 
-if solution_path:
-    print("Solution found:")
-    print(initial_state)
-    show_iterations(solution_path)
-else:
-    print("No solution found.")
+    if solution_path:
+        print("Solution found:")
+        print(initial_state)
+        show_iterations(solution_path)
+    else:
+        print("No solution found.")
+        main()
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
     pygame.quit()
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-pygame.quit()
+main()
