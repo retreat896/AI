@@ -18,12 +18,12 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 LIGHT_BLUE = (173, 216, 230)  # Light color for moved items
 
+
+
+goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
 # Initialize screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Grid Iterations")
-
-
-
 
 
 def find_blank(state):
@@ -32,51 +32,55 @@ def find_blank(state):
             if state[i][j] == 0:
                 return i, j
 
-def get_neighbors(state):
+def get_neighbors(state,pathstring):
     neighbors = []
     blank_row, blank_col = find_blank(state)
     moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # Right, Left, Down, Up
-
     for dr, dc in moves:
+
         new_row, new_col = blank_row + dr, blank_col + dc
         if 0 <= new_row < 3 and 0 <= new_col < 3:
             new_state = [row[:] for row in state] # Create a copy of the state
             new_state[blank_row][blank_col], new_state[new_row][new_col] = new_state[new_row][new_col], new_state[blank_row][blank_col]
             neighbors.append(new_state)
-    return neighbors
+    return neighbors, pathstring
 
-def solve_8_puzzle_bfs(initial_state, goal_state):
-    queue = deque([(initial_state, [])])
+def solve_8_puzzle_bfs(initial_state, goal_state,pathstring):
+    queue = deque([(initial_state, [], 0)]) # Store path and cost
     visited = {tuple(map(tuple, initial_state))}
-
+    nodes_visited = 0
+    
     while queue:
-        current_state, path = queue.popleft()
-        #display_grid(current_state)
-        if current_state == goal_state:
-            return path
+        current_state, path, cost = queue.popleft()
+        nodes_visited += 1
 
-        for neighbor in get_neighbors(current_state):
-            
+        if current_state == goal_state:
+            return path, cost, nodes_visited, pathstring
+        neighbors, pathstring = get_neighbors(current_state,pathstring)
+        for neighbor in neighbors:
             if tuple(map(tuple, neighbor)) not in visited:
                 visited.add(tuple(map(tuple, neighbor)))
-                queue.append((neighbor, path + [neighbor]))
+                queue.append((neighbor, path + [neighbor], cost + 1))
 
-        
-    return None
+    return None, None, nodes_visited, None # Return nodes visited even if no solution
 
-
-def draw_grid(state, moved_indices=None):
+def draw_grid(state, goal_state, moved_indices=None):
     screen.fill(WHITE)  # Fill the screen with white background
     
     for i in range(GRID_SIZE):
         for j in range(GRID_SIZE):
             # Get position of the cell
             x, y = j * CELL_SIZE, i * CELL_SIZE
-            # Highlight the moved items
-            if moved_indices and (i, j) in moved_indices:
-                color = LIGHT_BLUE
+            
+            # Check if the current tile is in the correct position
+            if state[i][j] == goal_state[i][j]:
+                color = GREEN  # Correct position
+            elif state[i][j] == 0:
+                color = LIGHT_BLUE  # Blank space
+            elif moved_indices and (i, j) in moved_indices:
+                color = RED  # Moved tile
             else:
-                color = BLUE
+                color = BLUE  # Incorrectly placed tile
 
             pygame.draw.rect(screen, color, (x, y, CELL_SIZE, CELL_SIZE))  # Draw cell
             # Draw the number in the center of the cell
@@ -85,19 +89,35 @@ def draw_grid(state, moved_indices=None):
             screen.blit(text, (x + CELL_SIZE // 3, y + CELL_SIZE // 3))
 
     pygame.display.update()
+
     
-def show_iterations(iterations):
+def show_iterations(iterations,pathstring):
     prev_state = None  # Keep track of the previous state for coloring
     for iteration in iterations:
         moved_indices = []
-        # Find moved elements compared to the previous state
+
+        # Determine the move direction
         if prev_state:
             for i in range(GRID_SIZE):
                 for j in range(GRID_SIZE):
                     if prev_state[i][j] != iteration[i][j]:
                         moved_indices.append((i, j))
+                        # Determine the direction of the move
+                        prev_blank_row, prev_blank_col = find_blank(prev_state)
+                        cur_blank_row, cur_blank_col = find_blank(iteration)
+                        if prev_blank_row == cur_blank_row:
+                            if prev_blank_col < cur_blank_col:
+                                pathstring += "Right "
+                            else:
+                                pathstring += "Left "
+                        else:
+                            if prev_blank_row < cur_blank_row:
+                                pathstring += "Down "
+                            else:
+                                pathstring += "Up "
 
-        draw_grid(iteration, moved_indices)
+
+        draw_grid(iteration, goal_state, moved_indices)
         prev_state = iteration
         time.sleep(1 / FPS)  # Control the speed of iteration change
         
@@ -106,28 +126,38 @@ def show_iterations(iterations):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+    return pathstring
 
 
 
 # Example usage:
-initial = random.sample(range(9), 9)
-initial_state = [initial[i * 3:(i + 1) * 3] for i in range(3)]
-goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+def main():
+    initial = random.sample(range(9), 9)
+    initial_state = [initial[i * 3:(i + 1) * 3] for i in range(3)]
 
-solution_path = solve_8_puzzle_bfs(initial_state, goal_state)
+    start_time = time.time()
+    solution_path, cost, nodes_visited,pathstring = solve_8_puzzle_bfs(initial_state, goal_state,pathstring='')
+    end_time = time.time()
+    running_time = end_time - start_time
 
-if solution_path:
-    print("Solution found:")
-    print(initial_state)
-    show_iterations(solution_path)
-else:
-    print("No solution found.")
-    pygame.quit()
+    if solution_path:
+        print("Solution found:")
+        print(initial_state)
+        for move in solution_path:
+            print(move)
+        pathstring = show_iterations(solution_path,pathstring)
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        print("\n--- Performance Metrics ---")
+        print(f"Path to goal: {len(solution_path)} moves") 
+        print(f"Moves taken: {pathstring}")
+        print(f"Cost of the path: {cost}")
+        print(f"Number of visited nodes: {nodes_visited}")
+        print(f"Running time: {running_time:.4f} seconds")
+        memory_usage = nodes_visited * 36  
+        print(f"Memory usage: {memory_usage} bytes")
+        pygame.quit()
+    else:
+        print("No solution found.")
+        main()
 
-pygame.quit()
+main()
