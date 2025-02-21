@@ -9,7 +9,7 @@ pygame.init()
 WIDTH, HEIGHT = 300, 300
 GRID_SIZE = 3
 CELL_SIZE = WIDTH // GRID_SIZE
-FPS = 2  # Frames per second to slow down the display of iterations
+FPS = 60 # Frames per second to slow down the display of iterations
 
 # Colors
 WHITE = (255, 255, 255)
@@ -45,24 +45,32 @@ def get_neighbors(state,pathstring):
             neighbors.append(new_state)
     return neighbors, pathstring
 
-def solve_8_puzzle_bfs(initial_state, goal_state,pathstring):
-    queue = deque([(initial_state, [], 0)]) # Store path and cost
-    visited = {tuple(map(tuple, initial_state))}
+def solve_8_puzzle_dfs(initial_state, goal_state, pathstring, max_iterations=10000):
+    stack = [(initial_state, [])]  # Stack contains (state, path)
+    visited = set()
     nodes_visited = 0
-    
-    while queue:
-        current_state, path, cost = queue.popleft()
+
+    while stack:
+        if nodes_visited >= max_iterations:  # Stop if max iterations reached
+            print("Max iterations reached, stopping search.")
+            return None, None, nodes_visited, None  # Indicate no solution found
+
+        current_state, path = stack.pop()  # Pop last added state (LIFO)
         nodes_visited += 1
+        visited.add(tuple(map(tuple, current_state)))  # Mark as visited
 
         if current_state == goal_state:
-            return path, cost, nodes_visited, pathstring
-        neighbors, pathstring = get_neighbors(current_state,pathstring)
-        for neighbor in neighbors:
-            if tuple(map(tuple, neighbor)) not in visited:
-                visited.add(tuple(map(tuple, neighbor)))
-                queue.append((neighbor, path + [neighbor], cost + 1))
+            return path, len(path), nodes_visited, pathstring  # Return cost as path length
 
-    return None, None, nodes_visited, None # Return nodes visited even if no solution
+        neighbors, pathstring = get_neighbors(current_state, pathstring)
+        for neighbor in neighbors:  # No need to reverse
+            if tuple(map(tuple, neighbor)) not in visited:
+                stack.append((neighbor, path + [neighbor]))
+
+    return None, None, nodes_visited, None  # No solution found
+
+
+
 
 def draw_grid(state, goal_state, moved_indices=None):
     screen.fill(WHITE)  # Fill the screen with white background
@@ -92,17 +100,15 @@ def draw_grid(state, goal_state, moved_indices=None):
 
     
 def show_iterations(iterations,pathstring):
-    prev_state = None  # Keep track of the previous state for coloring
+    prev_state = None  
     for iteration in iterations:
         moved_indices = []
 
-        # Determine the move direction
         if prev_state:
             for i in range(GRID_SIZE):
                 for j in range(GRID_SIZE):
                     if prev_state[i][j] != iteration[i][j]:
                         moved_indices.append((i, j))
-                        # Determine the direction of the move
                         prev_blank_row, prev_blank_col = find_blank(prev_state)
                         cur_blank_row, cur_blank_col = find_blank(iteration)
                         if prev_blank_row == cur_blank_row:
@@ -128,15 +134,28 @@ def show_iterations(iterations,pathstring):
                 return
     return pathstring
 
+def validateinput():
+    while True:
+        #take file input and validate it
+        try:
+            input_file = input("Enter the name of the input file: ")
+            with open(input_file, 'r') as f:
+                initial_state = [list(map(int, line.strip().split())) for line in f.readlines()]
+                if len(initial_state) == 3 and all(len(row) == 3 for row in initial_state):
+                    return initial_state
+                else:
+                    print("Invalid input format. Please enter a single line of integers, 0-8, non-repeating.")
+        except ValueError:
+            print("Invalid input format. Please enter a single line of integers, 0-8, non-repeating.")
 
 
 # Example usage:
 def main():
-    initial = random.sample(range(9), 9)
-    initial_state = [initial[i * 3:(i + 1) * 3] for i in range(3)]
-
+    #initial = random.sample(range(9), 9)
+    #initial_state = [initial[i * 3:(i + 1) * 3] for i in range(3)]
+    initial_state = validateinput()
     start_time = time.time()
-    solution_path, cost, nodes_visited,pathstring = solve_8_puzzle_bfs(initial_state, goal_state,pathstring='')
+    solution_path, cost, nodes_visited,pathstring = solve_8_puzzle_dfs(initial_state, goal_state,pathstring='')
     end_time = time.time()
     running_time = end_time - start_time
 
