@@ -140,28 +140,31 @@ def main():
     cell_size = WIDTH // grid_size
     goal_state = generate_goal_state(grid_size)
     initial_state = validate_input(grid_size)
-    start_time = time.time()
-    solution_path, cost, nodes_visited, pathstring = solve_puzzle_bfs(initial_state, goal_state, pathstring='')
-    end_time = time.time()
-    running_time = end_time - start_time
 
-    if solution_path:
-        print("\nSolution found:")
-        for move in solution_path:
-            print(move)
-        print("\n--- Performance Metrics ---")
-        print(f"Path to goal: {len(solution_path)} moves")
-        print(f"Moves taken: {pathstring}")
-        print(f"Cost of the path: {cost}")
-        print(f"Number of visited nodes: {nodes_visited}")
-        print(f"Running time: {running_time:.4f} seconds")
-        memory_usage = nodes_visited * 36
-        print(f"Memory usage: {memory_usage} bytes")
+    running = True
+    while running:
+        start_time = time.time()
+        solution_path, cost, nodes_visited, pathstring = solve_puzzle_bfs(initial_state, goal_state, pathstring='')
+        end_time = time.time()
+        running_time = end_time - start_time
 
-        pathstring = show_iterations(solution_path, goal_state, pathstring)
-        pygame.quit()
-    else:
-        print("No solution found.")
-        main()
+        if solution_path:
+            print("\nSolution found:")
+            for move in solution_path:
+                print(move)
+            print("\n--- Performance Metrics ---")
+            print(f"Path to goal: {len(solution_path)} moves")
+            print(f"Moves taken: {pathstring}")
+            print(f"Cost of the path: {cost}")
+            print(f"Number of visited nodes: {nodes_visited}")
+            print(f"Running time: {running_time:.4f} seconds")
+            memory_usage = nodes_visited * 36
+            print(f"Memory usage: {memory_usage} bytes")
+
+            pathstring = show_iterations(solution_path, goal_state, pathstring)
+            pygame.quit()
+            running = False
+        else:
+            print("No solution found.")
 
 main()
