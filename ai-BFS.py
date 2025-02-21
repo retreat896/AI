@@ -4,26 +4,23 @@ import time
 
 pygame.init()
 
-# Set up constants
 WIDTH, HEIGHT = 300, 300
-FPS = 2  # Frames per second to slow down the display of iterations
+FPS = 30 
 
-# Colors
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-LIGHT_BLUE = (173, 216, 230)  # Light color for moved items
+LIGHT_BLUE = (173, 216, 230)  
 
 def generate_goal_state(grid_size):
     return [[col + row * grid_size for col in range(grid_size)] for row in range(grid_size)]
 
-# Initialize screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Grid Iterations")
 
 def find_blank(state):
-    for i in range(len(state)):  # Use dynamic grid size
+    for i in range(len(state)):  
         for j in range(len(state[i])):
             if state[i][j] == 0:
                 return i, j
@@ -31,9 +28,8 @@ def find_blank(state):
 def get_neighbors(state, pathstring):
     neighbors = []
     blank_row, blank_col = find_blank(state)
-    moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # Right, Left, Down, Up
-
-    grid_size = len(state)  # Get current grid size dynamically
+    moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]  
+    grid_size = len(state)  
     for dr, dc in moves:
         new_row, new_col = blank_row + dr, blank_col + dc
         if 0 <= new_row < grid_size and 0 <= new_col < grid_size:
@@ -63,8 +59,8 @@ def solve_puzzle_bfs(initial_state, goal_state, pathstring):
     return None, None, nodes_visited, None
 
 def draw_grid(state, goal_state, moved_indices=None):
-    grid_size = len(state)  # Get grid size dynamically
-    cell_size = WIDTH // grid_size  # Adjust cell size dynamically
+    grid_size = len(state) 
+    cell_size = WIDTH // grid_size  
     screen.fill(WHITE)
 
     for i in range(grid_size):
@@ -104,7 +100,7 @@ def show_iterations(iterations, goal_state, pathstring):
 
         draw_grid(iteration, goal_state, moved_indices)
         prev_state = iteration
-        time.sleep(1 / FPS)
+        time.sleep(100 / FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -131,7 +127,6 @@ def validate_input(grid_size):
 def main():
     global WIDTH, HEIGHT
 
-    # Get grid size from user
     while True:
         try:
             grid_size = int(input("Enter the size of the grid (e.g., 3 for 3x3): "))
@@ -142,16 +137,9 @@ def main():
         except ValueError:
             print("Please enter a valid integer.")
 
-    # Adjust window size dynamically
     cell_size = WIDTH // grid_size
-
-    # Generate goal state dynamically
     goal_state = generate_goal_state(grid_size)
-
-    # Read user input
     initial_state = validate_input(grid_size)
-
-    # Solve the puzzle
     start_time = time.time()
     solution_path, cost, nodes_visited, pathstring = solve_puzzle_bfs(initial_state, goal_state, pathstring='')
     end_time = time.time()
@@ -174,6 +162,6 @@ def main():
         pygame.quit()
     else:
         print("No solution found.")
-        main()  # Restart the program
+        main()
 
 main()
