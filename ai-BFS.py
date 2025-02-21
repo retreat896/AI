@@ -100,7 +100,7 @@ def show_iterations(iterations, goal_state, pathstring):
 
         draw_grid(iteration, goal_state, moved_indices)
         prev_state = iteration
-        time.sleep(100 / FPS)
+        time.sleep(FPS / 60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
