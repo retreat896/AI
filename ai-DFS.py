@@ -136,17 +136,21 @@ def show_iterations(iterations,pathstring):
 
 def validateinput():
     while True:
-        #take file input and validate it
         try:
             input_file = input("Enter the name of the input file: ")
             with open(input_file, 'r') as f:
-                initial_state = [list(map(int, line.strip().split())) for line in f.readlines()]
-                if len(initial_state) == 3 and all(len(row) == 3 for row in initial_state):
-                    return initial_state
+                # Read only the first line, strip whitespace, and split into integers
+                numbers = list(map(int, f.readline().strip().split()))
+                
+                # Validate that the input contains exactly 9 unique numbers in range 0-8
+                if len(numbers) == 9 and set(numbers) == set(range(9)):
+                    # Convert to a 3x3 grid
+                    return [numbers[i:i+3] for i in range(0, 9, 3)]
                 else:
-                    print("Invalid input format. Please enter a single line of integers, 0-8, non-repeating.")
-        except ValueError:
-            print("Invalid input format. Please enter a single line of integers, 0-8, non-repeating.")
+                    print("Invalid input. Ensure the file contains 9 unique numbers from 0 to 8.")
+        except (ValueError, FileNotFoundError):
+            print("Invalid input or file not found. Try again.")
+
 
 
 # Example usage:
@@ -164,8 +168,6 @@ def main():
         print(initial_state)
         for move in solution_path:
             print(move)
-        pathstring = show_iterations(solution_path,pathstring)
-
         print("\n--- Performance Metrics ---")
         print(f"Path to goal: {len(solution_path)} moves") 
         print(f"Moves taken: {pathstring}")
@@ -174,6 +176,7 @@ def main():
         print(f"Running time: {running_time:.4f} seconds")
         memory_usage = nodes_visited * 36  
         print(f"Memory usage: {memory_usage} bytes")
+        pathstring = show_iterations(solution_path,pathstring)
         pygame.quit()
     else:
         print("No solution found.")
