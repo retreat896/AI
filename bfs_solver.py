@@ -45,7 +45,7 @@ def solve_puzzle_bfs(initial_state, goal_state, pathstring):
     queue = deque([(initial_state, [], 0)])
     visited = {tuple(map(tuple, initial_state))}
     nodes_visited = 0
-
+    count = 0
     while queue:
         current_state, path, cost = queue.popleft()
         nodes_visited += 1
@@ -57,6 +57,9 @@ def solve_puzzle_bfs(initial_state, goal_state, pathstring):
             if tuple(map(tuple, neighbor)) not in visited:
                 visited.add(tuple(map(tuple, neighbor)))
                 queue.append((neighbor, path + [neighbor], cost + 1))
+        count += 1
+        if count % 1000 == 0:
+            print(f"Iteration {count}")
 
     return None, None, nodes_visited, None
 
@@ -186,6 +189,12 @@ def main():
         print(f"Moves taken: {pathstring}")
     else:
         print("No solution found.")
+        font = pygame.font.SysFont(None, 40)
+        gameover_text = font.render("Not Solvable", True, RED)
+        screen.fill(BLUE)
+        screen.blit(gameover_text, (WIDTH // 2 - gameover_text.get_width() // 2, HEIGHT // 2 - gameover_text.get_height() // 2))
+        pygame.display.flip()    
+        time.sleep(2)
 
     running = True
     while running:

@@ -50,7 +50,7 @@ def solve_puzzle_dfs(initial_state, goal_state, pathstring):
     stack = [(initial_state, [])]  
     visited = set()
     nodes_visited = 0
-
+    count = 0
     while stack:
         if nodes_visited >= MAX_ITERATIONS:  
             print("Max iterations reached, stopping search.")
@@ -67,6 +67,9 @@ def solve_puzzle_dfs(initial_state, goal_state, pathstring):
         for neighbor in neighbors: 
             if tuple(map(tuple, neighbor)) not in visited:
                 stack.append((neighbor, path + [neighbor]))
+        count += 1
+        if count % 1000 == 0:
+            print(f"Iteration {count}")
 
     return None, None, nodes_visited, None  
 
@@ -178,6 +181,12 @@ def main():
     cell_size = WIDTH // grid_size
     goal_state = generate_goal_state(grid_size)
     initial_state = validate_input(grid_size)
+    font = pygame.font.SysFont(None, 40)
+    gamestart_text = font.render("Algorithm Running", True, GREEN)
+    screen.fill((0,0,0))
+    screen.blit(gamestart_text, (WIDTH // 2 - gamestart_text.get_width() // 2, HEIGHT // 2 - gamestart_text.get_height() // 2))
+    pygame.display.flip()    
+    time.sleep(2)
     start_time = time.time()
     solution_path, cost, nodes_visited, pathstring = solve_puzzle_dfs(initial_state, goal_state, pathstring='')
     end_time = time.time()
@@ -198,6 +207,14 @@ def main():
         print(f"Moves taken: {pathstring}")
     else:
         print("No solution found.")
+        font = pygame.font.SysFont(None, 40)
+        gameover_text = font.render("Not Solvable", True, RED)
+        screen.fill(BLUE)
+        screen.blit(gameover_text, (WIDTH // 2 - gameover_text.get_width() // 2, HEIGHT // 2 - gameover_text.get_height() // 2))
+        pygame.display.flip()    
+        time.sleep(2)
+
+
     running = True
     while running:
         for event in pygame.event.get():

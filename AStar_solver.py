@@ -1,26 +1,25 @@
 from collections import deque
 import pygame
 import time
+import argparse
+import math
 
 pygame.init()
 
 WIDTH, HEIGHT = 300, 300
-GRID_SIZE = 3
-CELL_SIZE = WIDTH // GRID_SIZE
-FPS = 100
+FPS = 500 
 
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-LIGHT_BLUE = (173, 216, 230)
+LIGHT_BLUE = (173, 216, 230)  
 
 def generate_goal_state(grid_size):
     return [[col + row * grid_size for col in range(grid_size)] for row in range(grid_size)]
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Grid Iterations")
-
 
 def find_blank(state):
     for i in range(len(state)):  
@@ -42,33 +41,27 @@ def get_neighbors(state, pathstring):
 
     return neighbors, pathstring
 
-def solve_puzzle_dfs(initial_state, goal_state, pathstring, max_iterations=10000):
-    stack = [(initial_state, [])]  
-    visited = set()
+def solve_puzzle_bfs(initial_state, goal_state, pathstring):
+    queue = deque([(initial_state, [], 0)])
+    visited = {tuple(map(tuple, initial_state))}
     nodes_visited = 0
 
-    while stack:
-        if nodes_visited >= max_iterations:  
-            print("Max iterations reached, stopping search.")
-            return None, None, nodes_visited, None  
-
-        current_state, path = stack.pop() 
+    while queue:
+        current_state, path, cost = queue.popleft()
         nodes_visited += 1
-        visited.add(tuple(map(tuple, current_state))) 
 
         if current_state == goal_state:
-            return path, len(path), nodes_visited, pathstring  
-
+            return path, cost, nodes_visited, pathstring
         neighbors, pathstring = get_neighbors(current_state, pathstring)
-        for neighbor in neighbors: 
+        for neighbor in neighbors:
             if tuple(map(tuple, neighbor)) not in visited:
-                stack.append((neighbor, path + [neighbor]))
+                visited.add(tuple(map(tuple, neighbor)))
+                queue.append((neighbor, path + [neighbor], cost + 1))
 
-    return None, None, nodes_visited, None  
-
+    return None, None, nodes_visited, None
 
 def draw_grid(state, goal_state, moved_indices=None):
-    grid_size = len(state)  
+    grid_size = len(state) 
     cell_size = WIDTH // grid_size  
     screen.fill(WHITE)
 
@@ -93,6 +86,7 @@ def draw_grid(state, goal_state, moved_indices=None):
 
 def show_iterations(iterations, goal_state, pathstring):
     prev_state = None
+    count = 0
     for iteration in iterations:
         moved_indices = []
         if prev_state:
@@ -109,17 +103,21 @@ def show_iterations(iterations, goal_state, pathstring):
 
         draw_grid(iteration, goal_state, moved_indices)
         prev_state = iteration
-        time.sleep(100 / FPS)
+        count += 1
+        time.sleep(60 / FPS)
+        if count % 1000 == 0:
+            print(f"Iteration {count}")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
     return pathstring
 
+
 def validate_input(grid_size):
     while True:
         try:
-            input_file = input("Enter the name of the input file: ")
+            input_file = args.input_file  
             with open(input_file, 'r') as f:
                 numbers = list(map(int, f.readline().strip().split()))
 
@@ -131,28 +129,45 @@ def validate_input(grid_size):
                 else:
                     print(f"Invalid input. Ensure the file contains {expected_numbers} unique numbers from 0 to {expected_numbers - 1}.")
         except (ValueError, FileNotFoundError):
-            print("Invalid input or file not found. Try again.")
+            input_file = input("Enter the name of the input file: ")  
+            with open(input_file, 'r') as f:
+                numbers = list(map(int, f.readline().strip().split()))
 
+                expected_numbers = grid_size ** 2
+                valid_range = set(range(expected_numbers))
+
+                if len(numbers) == expected_numbers and set(numbers) == valid_range:
+                    return [numbers[i:i + grid_size] for i in range(0, expected_numbers, grid_size)]
+                else:
+                    print(f"Invalid input. Ensure the file contains {expected_numbers} unique numbers from 0 to {expected_numbers - 1}.")
+
+
+def calculate_grid_size(input_file):
+    try:
+        with open(input_file, 'r') as f:
+            numbers = list(map(int, f.readline().strip().split()))
+            grid_size = int(math.sqrt(len(numbers))) 
+            if grid_size * grid_size != len(numbers):
+                raise ValueError("The input file does not represent a perfect square grid.")
+            return grid_size
+    except (ValueError, FileNotFoundError) as e:
+        print(f"Error: {e}")
+        return None
 
 
 def main():
+    global args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input_file', help='The input file for the puzzle')
+    args = parser.parse_args()
     global WIDTH, HEIGHT
 
-    while True:
-        try:
-            grid_size = int(input("Enter the size of the grid (e.g., 3 for 3x3): "))
-            if grid_size < 2:
-                print("Grid size must be at least 2.")
-                continue
-            break
-        except ValueError:
-            print("Please enter a valid integer.")
-
+    grid_size = calculate_grid_size(args.input_file)
     cell_size = WIDTH // grid_size
     goal_state = generate_goal_state(grid_size)
     initial_state = validate_input(grid_size)
     start_time = time.time()
-    solution_path, cost, nodes_visited, pathstring = solve_puzzle_dfs(initial_state, goal_state, pathstring='')
+    solution_path, cost, nodes_visited, pathstring = solve_puzzle_bfs(initial_state, goal_state, pathstring='')
     end_time = time.time()
     running_time = end_time - start_time
 
@@ -162,17 +177,21 @@ def main():
             print(move)
         print("\n--- Performance Metrics ---")
         print(f"Path to goal: {len(solution_path)} moves")
-        print(f"Moves taken: {pathstring}")
-        print(f"Cost of the path: {cost}")
         print(f"Number of visited nodes: {nodes_visited}")
         print(f"Running time: {running_time:.4f} seconds")
         memory_usage = nodes_visited * 36
         print(f"Memory usage: {memory_usage} bytes")
 
         pathstring = show_iterations(solution_path, goal_state, pathstring)
-        pygame.quit()
+        print(f"Moves taken: {pathstring}")
     else:
         print("No solution found.")
-        main() 
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+    pygame.quit()
 
 main()
