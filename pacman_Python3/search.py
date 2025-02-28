@@ -87,11 +87,16 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+    print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    print(problem)
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -111,9 +116,16 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+def hillClimbing(problem):
+    """Search for a solution by continuously moving towards a goal state, choosing the best neighbor at each step."""
+    "*** YOUR CODE HERE ***"
+    util.raiseNotDefined()
+
+
 
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
+hlclimb = hillClimbing
 ucs = uniformCostSearch

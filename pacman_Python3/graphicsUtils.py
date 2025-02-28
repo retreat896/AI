@@ -18,7 +18,7 @@ import random
 import string
 import time
 import types
-import Tkinter
+import tkinter
 import os.path
 
 _Windows = sys.platform == 'win32'  # True if on Win95/98/NT
@@ -37,7 +37,7 @@ def formatColor(r, g, b):
     return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
 
 def colorToVector(color):
-    return map(lambda x: int(x, 16) / 256.0, [color[1:3], color[3:5], color[5:7]])
+    return [int(x, 16) / 256.0 for x in [color[1:3], color[3:5], color[5:7]]]
 
 if _Windows:
     _canvas_tfonts = ['times new roman', 'lucida console']
@@ -69,14 +69,14 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
     _bg_color = color
 
     # Create the root window
-    _root_window = Tkinter.Tk()
+    _root_window = tkinter.Tk()
     _root_window.protocol('WM_DELETE_WINDOW', _destroy_window)
     _root_window.title(title or 'Graphics Window')
     _root_window.resizable(0, 0)
 
     # Create the canvas object
     try:
-        _canvas = Tkinter.Canvas(_root_window, width=width, height=height)
+        _canvas = tkinter.Canvas(_root_window, width=width, height=height)
         _canvas.pack()
         draw_background()
         _canvas.update()
@@ -148,8 +148,8 @@ def end_graphics():
             sleep(1)
             if _root_window != None:
                 _root_window.destroy()
-        except SystemExit, e:
-            print 'Ending graphics raised an exception:', e
+        except SystemExit as e:
+            print('Ending graphics raised an exception:', e)
     finally:
         _root_window = None
         _canvas = None
@@ -195,7 +195,7 @@ def circle(pos, r, outlineColor, fillColor, endpoints=None, style='pieslice', wi
 def image(pos, file="../../blueghost.gif"):
     x, y = pos
     # img = PhotoImage(file=file)
-    return _canvas.create_image(x, y, image = Tkinter.PhotoImage(file=file), anchor = Tkinter.NW)
+    return _canvas.create_image(x, y, image = tk.PhotoImage(file=file), anchor = tkinter.NW)
 
 
 def refresh():
@@ -291,16 +291,23 @@ def _clear_keys(event=None):
     _keyswaiting = {}
     _got_release = None
 
-def keys_pressed(d_o_e=Tkinter.tkinter.dooneevent,
-                 d_w=Tkinter.tkinter.DONT_WAIT):
-    d_o_e(d_w)
-    if _got_release:
-        d_o_e(d_w)
-    return _keysdown.keys()
+# def keys_pressed(d_o_e=tkinter.dooneevent,
+#                  d_w=tkinter.tkinter.DONT_WAIT):
+#     d_o_e(d_w)
+#     if _got_release:
+#         d_o_e(d_w)
+#     return list(_keysdown.keys())
+
+def keys_pressed():
+    _root_window.update_idletasks()
+    _root_window.after(10, _root_window.quit)  # Process events after 10ms
+    _root_window.mainloop()
+    return list(_keysdown.keys())
+
 
 def keys_waiting():
     global _keyswaiting
-    keys = _keyswaiting.keys()
+    keys = list(_keyswaiting.keys())
     _keyswaiting = {}
     return keys
 
@@ -313,11 +320,17 @@ def wait_for_keys():
         sleep(0.05)
     return keys
 
-def remove_from_screen(x,
-                       d_o_e=Tkinter.tkinter.dooneevent,
-                       d_w=Tkinter.tkinter.DONT_WAIT):
+# def remove_from_screen(x,
+#                        d_o_e=tkinter.tkinter.dooneevent,
+#                        d_w=tkinter.tkinter.DONT_WAIT):
+#     _canvas.delete(x)
+#     d_o_e(d_w)
+
+def remove_from_screen(x):
     _canvas.delete(x)
-    d_o_e(d_w)
+    _root_window.update_idletasks()  # Process pending UI updates
+    _root_window.update()  # Ensure the canvas is updated
+
 
 def _adjust_coords(coord_list, x, y):
     for i in range(0, len(coord_list), 2):
@@ -325,50 +338,96 @@ def _adjust_coords(coord_list, x, y):
         coord_list[i + 1] = coord_list[i + 1] + y
     return coord_list
 
-def move_to(object, x, y=None,
-            d_o_e=Tkinter.tkinter.dooneevent,
-            d_w=Tkinter.tkinter.DONT_WAIT):
+# def move_to(object, x, y=None,
+#             d_o_e=tkinter.tkinter.dooneevent,
+#             d_w=tkinter.tkinter.DONT_WAIT):
+#     if y is None:
+#         try: x, y = x
+#         except: raise  'incomprehensible coordinates'
+
+#     horiz = True
+#     newCoords = []
+#     current_x, current_y = _canvas.coords(object)[0:2] # first point
+#     for coord in  _canvas.coords(object):
+#         if horiz:
+#             inc = x - current_x
+#         else:
+#             inc = y - current_y
+#         horiz = not horiz
+
+#         newCoords.append(coord + inc)
+
+#     _canvas.coords(object, *newCoords)
+#     d_o_e(d_w)
+
+def move_to(object, x, y=None):
     if y is None:
-        try: x, y = x
-        except: raise  'incomprehensible coordinates'
+        try:
+            x, y = x
+        except:
+            raise Exception('incomprehensible coordinates')
 
     horiz = True
     newCoords = []
-    current_x, current_y = _canvas.coords(object)[0:2] # first point
-    for coord in  _canvas.coords(object):
-        if horiz:
-            inc = x - current_x
-        else:
-            inc = y - current_y
-        horiz = not horiz
+    current_x, current_y = _canvas.coords(object)[0:2]
 
+    for coord in _canvas.coords(object):
+        inc = (x - current_x) if horiz else (y - current_y)
+        horiz = not horiz
         newCoords.append(coord + inc)
 
     _canvas.coords(object, *newCoords)
-    d_o_e(d_w)
 
-def move_by(object, x, y=None,
-            d_o_e=Tkinter.tkinter.dooneevent,
-            d_w=Tkinter.tkinter.DONT_WAIT, lift=False):
+    _root_window.after(10, _root_window.quit)  # Processes events after 10ms
+    _root_window.mainloop()
+
+
+# def move_by(object, x, y=None,
+#             d_o_e=tkinter.tkinter.dooneevent,
+#             d_w=tkinter.tkinter.DONT_WAIT, lift=False):
+#     if y is None:
+#         try: x, y = x
+#         except: raise Exception('incomprehensible coordinates')
+
+#     horiz = True
+#     newCoords = []
+#     for coord in  _canvas.coords(object):
+#         if horiz:
+#             inc = x
+#         else:
+#             inc = y
+#         horiz = not horiz
+
+#         newCoords.append(coord + inc)
+
+#     _canvas.coords(object, *newCoords)
+#     d_o_e(d_w)
+#     if lift:
+#         _canvas.tag_raise(object)
+
+def move_by(object, x, y=None, lift=False):
     if y is None:
-        try: x, y = x
-        except: raise Exception, 'incomprehensible coordinates'
+        try:
+            x, y = x
+        except:
+            raise Exception('incomprehensible coordinates')
 
     horiz = True
     newCoords = []
-    for coord in  _canvas.coords(object):
-        if horiz:
-            inc = x
-        else:
-            inc = y
-        horiz = not horiz
 
+    for coord in _canvas.coords(object):
+        inc = x if horiz else y
+        horiz = not horiz
         newCoords.append(coord + inc)
 
     _canvas.coords(object, *newCoords)
-    d_o_e(d_w)
+
+    _root_window.after(10, _root_window.quit)  # Schedule UI updates
+    _root_window.mainloop()
+
     if lift:
         _canvas.tag_raise(object)
+
 
 def writePostscript(filename):
     "Writes the current canvas to a postscript file."
