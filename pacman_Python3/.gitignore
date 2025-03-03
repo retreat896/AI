@@ -1,10 +1,5 @@
-2.txt
-Adams_assignment01.pdf
-Adams_assignment01.zip
-easydfs.txt
-"psudo code"
-.venv
-.vscode
+__pycache__
+./__pycache__
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

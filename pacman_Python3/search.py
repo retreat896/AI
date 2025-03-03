@@ -91,17 +91,114 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
+    # Output:
+    # Start: (5, 5)
+    # Is the start a goal? False
+    # Start's successors: [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
+
+     # Create a stack to store nodes to visit
+    stack = util.Stack()
+
+    # Add the starting state to the stack
+    stack.push((problem.getStartState(), []))
+
+    # Create a set to keep track of visited states
+    visited = set()
+
+    while not stack.isEmpty():
+        # Get the current node from the stack
+        (node, path) = stack.pop()
+
+        # If this node is the goal state, return the path
+        if problem.isGoalState(node):
+            return path
+
+        # Mark this node as visited
+        visited.add(node)
+
+        # Add all successors of the current node to the stack
+        for successor, action, cost in problem.getSuccessors(node):
+            if successor not in visited:
+                new_path = path + [action]
+                stack.push((successor, new_path))
+
+    return None  # Return None if no solution is found
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    print(problem)
+        # Create a queue to store nodes to visit
+    queue = util.Queue()
+
+    # Add the starting state to the queue
+    queue.push((problem.getStartState(), []))
+
+    # Create a set to keep track of visited states
+    visited = set()
+
+    while not queue.isEmpty():
+        # Get the current node from the queue
+        (node, path) = queue.pop()
+
+        # If this node is the goal state, return the path
+        if problem.isGoalState(node):
+            return path
+
+        # Mark this node as visited
+        visited.add(node)
+
+        # Add all successors of the current node to the queue
+        for successor, action, cost in problem.getSuccessors(node):
+            if successor not in visited:
+                new_path = path + [action]
+                queue.push((successor, new_path))
+
+    return None
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+      # Create a priority queue to store nodes to visit
+    pq = util.PriorityQueue()
+    costs = {}
+    visited = set()
+
+    # Add the starting state to the priority queue with cost 0
+    problem.getSuccessors(problem.getStartState())
+    for successor, action, cost in problem.getSuccessors(problem.getStartState()):
+        if successor not in visited:
+            new_cost = cost
+            new_path = [action]
+            pq.push((new_cost, successor, new_path), -new_cost)
+            costs[successor] = new_cost
+
+    while not pq.isEmpty():
+        # Get the current node from the priority queue
+        (cost, node, path) = pq.pop()
+
+        # If this node is the goal state, return the path
+        if problem.isGoalState(node):
+            return path
+
+        # Mark this node as visited
+        visited.add(node)
+
+        # Add all successors of the current node to the priority queue
+        for successor, action, succ_cost in problem.getSuccessors(node):
+            if successor not in visited:
+                new_cost = cost + succ_cost
+                new_path = path + [action]
+
+                # Calculate the total cost of the new path
+                total_cost = new_cost + problem.getCostOfActions(new_path)
+
+                # Add the new node to the priority queue with its cost
+                pq.push((total_cost, successor, new_path), -total_cost)
+                costs[successor] = total_cost
+
+    return None
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -114,6 +211,40 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+         # Initialize the priority queue with the start state
+    # Each element in the queue is a tuple of (f(n), g(n), state, path)
+    # where f(n) = g(n) + h(n)
+    priority_queue = util.PriorityQueue()
+    start_state = problem.getStartState()
+    initial_cost = 0
+    initial_priority = heuristic(start_state) + initial_cost
+    priority_queue.push((initial_cost, start_state, []), initial_priority)
+    
+    visited = set()
+
+    while not priority_queue.isEmpty():
+        current = priority_queue.pop()
+        current_g, state, path = current
+        
+        if problem.isGoalState(state):
+            return path
+        
+        if state in visited:
+            continue
+        visited.add(state)
+        
+        for successor, action, step_cost in problem.getSuccessors(state):
+            new_g = current_g + step_cost
+            heuristic_cost = heuristic(successor)
+            new_priority = new_g + heuristic_cost
+            
+            # Check if we've already explored this state with a lower or equal cost
+            if successor not in visited:
+                new_path = path + [action]
+                priority_queue.push((new_g, successor, new_path), new_priority)
+    
+    return []
+    
     util.raiseNotDefined()
 
 def hillClimbing(problem):
