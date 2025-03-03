@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+
 
 class SearchProblem:
     """
@@ -68,9 +69,11 @@ def tinyMazeSearch(problem):
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
     from game import Directions
+
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -96,7 +99,7 @@ def depthFirstSearch(problem):
     # Is the start a goal? False
     # Start's successors: [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
 
-     # Create a stack to store nodes to visit
+    # Create a stack to store nodes to visit
     stack = util.Stack()
 
     # Add the starting state to the stack
@@ -125,10 +128,11 @@ def depthFirstSearch(problem):
     return None  # Return None if no solution is found
     util.raiseNotDefined()
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-        # Create a queue to store nodes to visit
+    # Create a queue to store nodes to visit
     queue = util.Queue()
 
     # Add the starting state to the queue
@@ -153,14 +157,13 @@ def breadthFirstSearch(problem):
             if successor not in visited:
                 new_path = path + [action]
                 queue.push((successor, new_path))
-
     return None
-    util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-      # Create a priority queue to store nodes to visit
+    # Create a priority queue to store nodes to visit
     pq = util.PriorityQueue()
     costs = {}
     visited = set()
@@ -201,6 +204,7 @@ def uniformCostSearch(problem):
     return None
     util.raiseNotDefined()
 
+
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -208,10 +212,11 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-         # Initialize the priority queue with the start state
+    # Initialize the priority queue with the start state
     # Each element in the queue is a tuple of (f(n), g(n), state, path)
     # where f(n) = g(n) + h(n)
     priority_queue = util.PriorityQueue()
@@ -219,39 +224,39 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     initial_cost = 0
     initial_priority = heuristic(start_state) + initial_cost
     priority_queue.push((initial_cost, start_state, []), initial_priority)
-    
+
     visited = set()
 
     while not priority_queue.isEmpty():
         current = priority_queue.pop()
         current_g, state, path = current
-        
+
         if problem.isGoalState(state):
             return path
-        
+
         if state in visited:
             continue
         visited.add(state)
-        
+
         for successor, action, step_cost in problem.getSuccessors(state):
             new_g = current_g + step_cost
             heuristic_cost = heuristic(successor)
             new_priority = new_g + heuristic_cost
-            
+
             # Check if we've already explored this state with a lower or equal cost
             if successor not in visited:
                 new_path = path + [action]
                 priority_queue.push((new_g, successor, new_path), new_priority)
-    
+
     return []
-    
+
     util.raiseNotDefined()
+
 
 def hillClimbing(problem):
     """Search for a solution by continuously moving towards a goal state, choosing the best neighbor at each step."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
-
 
 
 # Abbreviations
