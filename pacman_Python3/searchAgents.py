@@ -144,7 +144,7 @@ class PositionSearchProblem(search.SearchProblem):
     Note: this search problem is fully specified; you should NOT change it.
     """
 
-    def __init__(self, gameState, costFn = lambda x: 1, goal=(1,1), start=None, warn=True, visualize=True):
+    def __init__(self, gameState, costFn = lambda x: 1, goal=(20,1), start=None, warn=True, visualize=True):
         """
         Stores the start and goal.
 
@@ -155,11 +155,14 @@ class PositionSearchProblem(search.SearchProblem):
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         if start != None: self.startState = start
+        #if astar then use set goal of self.goal = (1,20)
+        
         self.goal = goal
         self.costFn = costFn
         self.visualize = visualize
         if warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal)):
             print('Warning: this does not look like a regular search maze')
+
 
         # For display purposes
         self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
@@ -478,14 +481,29 @@ class ClosestDotSearchAgent(SearchAgent):
         Returns a path (a list of actions) to the closest dot, starting from
         gameState.
         """
-        # Here are some useful elements of the startState
         startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
-
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        
+        # Using Breadth-First Search (BFS) to find the shortest path to the closest dot
+        queue = util.Queue()
+        queue.push((startPosition, []))  # (current position, path taken to reach it)
+        visited = set()
+        
+        while not queue.isEmpty():
+            position, path = queue.pop()
+            
+            if position in visited:
+                continue
+            visited.add(position)
+            
+            if problem.isGoalState(position):
+                return path  # Return the path to the closest dot
+            
+            for nextPosition, action, _ in problem.getSuccessors(position):
+                if nextPosition not in visited:
+                    queue.push((nextPosition, path + [action]))
+        
+        return [] 
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -506,7 +524,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         "Stores information from the gameState.  You don't need to change this."
         # Store the food for later reference
         self.food = gameState.getFood()
-
+        
         # Store info for the PositionSearchProblem (no need to change this)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
@@ -515,13 +533,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
     def isGoalState(self, state):
         """
-        The state is Pacman's position. Fill this in with a goal test that will
-        complete the problem definition.
+        The state is Pacman's position. This function checks if Pacman is at a goal state,
+        which is defined as being on a food dot.
         """
-        x,y = state
+        x, y = state
+        return self.food[x][y]  # Returns True if there's food at (x, y), otherwise False
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
     """
