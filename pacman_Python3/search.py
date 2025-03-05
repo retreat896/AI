@@ -130,34 +130,30 @@ def depthFirstSearch(problem):
 
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    # Create a queue to store nodes to visit
     queue = util.Queue()
-
-    # Add the starting state to the queue
-    queue.push((problem.getStartState(), []))
-
-    # Create a set to keep track of visited states
+    start_state = problem.getStartState()
+    
+    # Start BFS with the initial state and an empty path
+    queue.push((start_state, []))
+    
+    # Track visited states
     visited = set()
+    visited.add(start_state)  # Ensure we don't revisit the start state
 
     while not queue.isEmpty():
-        # Get the current node from the queue
-        (node, path) = queue.pop()
+        node, path = queue.pop()
 
-        # If this node is the goal state, return the path
+        # If the goal is found, return the path
         if problem.isGoalState(node):
             return path
 
-        # Mark this node as visited
-        visited.add(node)
-
-        # Add all successors of the current node to the queue
-        for successor, action, cost in problem.getSuccessors(node):
+        # Expand the current state
+        for successor, action, step_cost in problem.getSuccessors(node):
             if successor not in visited:
-                new_path = path + [action]
-                queue.push((successor, new_path))
-    return None
+                visited.add(successor)  # Mark as visited before adding to queue
+                queue.push((successor, path + [action]))
+
+    return []  # No solution found
 
 
 def uniformCostSearch(problem):
@@ -215,46 +211,51 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    
     # Initialize the priority queue with the start state
-    # Each element in the queue is a tuple of (f(n), g(n), state, path)
-    # where f(n) = g(n) + h(n)
-    priority_queue = util.PriorityQueue()
     start_state = problem.getStartState()
     initial_cost = 0
-    initial_priority = heuristic(start_state) + initial_cost
-    priority_queue.push((initial_cost, start_state, []), initial_priority)
+    initial_priority = heuristic(start_state, problem) + initial_cost
+    priority_queue = util.PriorityQueue()
+    priority_queue.push((start_state, [], initial_cost), initial_priority)
 
-    visited = set()
+    # Dictionary to track the lowest cost to reach a state
+    visited = {}
 
     while not priority_queue.isEmpty():
-        current = priority_queue.pop()
-        current_g, state, path = current
+        # Get the state with the lowest f(n) = g(n) + h(n)
+        state, path, cost = priority_queue.pop()
 
+        # If the state is the goal, return the path
         if problem.isGoalState(state):
             return path
 
-        if state in visited:
+        # If we've visited this state with a lower cost, skip it
+        if state in visited and visited[state] <= cost:
             continue
-        visited.add(state)
 
+        # Mark the state as visited with the current cost
+        visited[state] = cost
+
+        # Expand the state and push successors onto the priority queue
         for successor, action, step_cost in problem.getSuccessors(state):
-            new_g = current_g + step_cost
-            heuristic_cost = heuristic(successor)
-            new_priority = new_g + heuristic_cost
+            new_cost = cost + step_cost
+            heuristic_cost = heuristic(successor, problem)
+            new_priority = new_cost + heuristic_cost
 
-            # Check if we've already explored this state with a lower or equal cost
-            if successor not in visited:
-                new_path = path + [action]
-                priority_queue.push((new_g, successor, new_path), new_priority)
+            # Push the new state with the updated path and cost
+            new_path = path + [action]
+            priority_queue.push((successor, new_path, new_cost), new_priority)
 
-    return []
+    return []  # Return an empty list if no solution is found
 
-    util.raiseNotDefined()
 
 
 def hillClimbing(problem):
-    """Search for a solution by continuously moving towards a goal state, choosing the best neighbor at each step."""
+    """
+    Search for a solution by continuously moving towards a goal state, 
+    choosing the best neighbor at each step.
+    """
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
