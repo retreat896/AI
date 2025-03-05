@@ -19,32 +19,32 @@ python pacman.py -l smallMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
 python pacman.py -l tinyMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
 
 # A* with no GUI
-python pacman.py -l bigMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l bigMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
-python pacman.py -l contoursMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l contoursMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
-python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
-python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l bigMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l bigMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l contoursMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l contoursMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
 
 ################################################################################################
 #                                                                                              #
-#            IMPORTANT - IN SearchAgents.py > class PositionSearchProblem >  def __init__      #
-#                CHANGE PARAMETER "goal=(1, 1)" TO "goal=(20,1)"                               #
+#         REQUIRED CODE SNIPPET IN POSITIONSEARCHPROBLEM                                       #                                                                                    #
+#        print("Found a food at",gameState.getFood().asList())                                 #
+#        for(x,y) in gameState.getFood().asList():                                             #
+#            self.goal = (x,y)                                                                 #
+#            print("Found a food at",self.goal)                                                #
+#            break                                                                             #
+#        if(self.goal == (1,1)):                                                               #
+#            self.goal = goal                                                                  #
 #                                                                                              #
-################################################################################################
 python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic --frameTime 0
 python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0
-################################################################################################
-#                                                                                              #
-#            IMPORTANT - IN SearchAgents.py > class PositionSearchProblem >  def __init__      #
-#                CHANGE PARAMETER "goal=(1, 1)" TO "goal=(20,1)"                               #
-#                                                                                              #
 ################################################################################################
 
 python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
@@ -93,20 +93,19 @@ python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=astar,prob=PositionSear
 python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0
 python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic --frameTime 0
 python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0
-
 ################################################################################################
 #                                                                                              #
-#            IMPORTANT - IN SearchAgents.py > class PositionSearchProblem >  def __init__      #
-#                CHANGE PARAMETER "goal=(1, 1)" TO "goal=(20,1)"                               #
+#         REQUIRED CODE SNIPPET IN POSITIONSEARCHPROBLEM                                       #                                                                                    #
+#        print("Found a food at",gameState.getFood().asList())                                 #
+#        for(x,y) in gameState.getFood().asList():                                             #
+#            self.goal = (x,y)                                                                 #
+#            print("Found a food at",self.goal)                                                #
+#            break                                                                             #
+#        if(self.goal == (1,1)):                                                               #
+#            self.goal = goal                                                                  #
 #                                                                                              #
-################################################################################################
 python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic --frameTime 0
 python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0
-################################################################################################
-#                                                                                              #
-#            IMPORTANT - IN SearchAgents.py > class PositionSearchProblem >  def __init__      #
-#                CHANGE PARAMETER "goal=(1, 1)" TO "goal=(20,1)"                               #
-#                                                                                              #
 ################################################################################################
 
 python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0

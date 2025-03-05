@@ -144,7 +144,7 @@ class PositionSearchProblem(search.SearchProblem):
     Note: this search problem is fully specified; you should NOT change it.
     """
 
-    def __init__(self, gameState, costFn = lambda x: 1, goal=(20,1), start=None, warn=True, visualize=True):
+    def __init__(self, gameState, costFn = lambda x: 1, goal=(1,1), start=None, warn=True, visualize=True):
         """
         Stores the start and goal.
 
@@ -152,12 +152,20 @@ class PositionSearchProblem(search.SearchProblem):
         costFn: A function from a search state (tuple) to a non-negative number
         goal: A position in the gameState
         """
+
+        #find the goal using gamestate.getFood
+        print("Found a food at",gameState.getFood().asList())
+        for(x,y) in gameState.getFood().asList():
+            self.goal = (x,y)
+            print("Found a food at",self.goal)
+            break
+        if(self.goal == (1,1)):
+            self.goal = goal
+
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         if start != None: self.startState = start
         #if astar then use set goal of self.goal = (1,20)
-        
-        self.goal = goal
         self.costFn = costFn
         self.visualize = visualize
         if warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal)):
