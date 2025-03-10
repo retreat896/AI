@@ -154,13 +154,11 @@ class PositionSearchProblem(search.SearchProblem):
         """
 
         #find the goal using gamestate.getFood
-        print("Found a food at",gameState.getFood().asList())
-        for(x,y) in gameState.getFood().asList():
+# Current code sets goal from first food found but falls back to (1,1)
+        for (x,y) in gameState.getFood().asList():
             self.goal = (x,y)
-            print("Found a food at",self.goal)
+            print("Found a food at", self.goal)
             break
-        if(self.goal == (1,1)):
-            self.goal = goal
 
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
@@ -371,7 +369,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    return 0 
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -494,7 +492,7 @@ class ClosestDotSearchAgent(SearchAgent):
         
         # Using Breadth-First Search (BFS) to find the shortest path to the closest dot
         queue = util.Queue()
-        queue.push((startPosition, []))  # (current position, path taken to reach it)
+        queue.push((startPosition, []))
         visited = set()
         
         while not queue.isEmpty():

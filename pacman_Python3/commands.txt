@@ -1,22 +1,22 @@
 # DFS with no GUI
-python pacman.py -l bigMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l contoursMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l mediumMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l openMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l smallMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
-python pacman.py -l tinyMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem -q
+python pacman.py -l bigMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l contoursMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l mediumMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l openMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l smallMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
+python pacman.py -l tinyMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem -q
 
 # BFS with no GUI 
-python pacman.py -l bigMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l contoursMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l openMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l smallMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
-python pacman.py -l tinyMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem -q
+python pacman.py -l bigMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l contoursMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l openMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l smallMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
+python pacman.py -l tinyMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem -q
 
 # A* with no GUI
 python pacman.py -l bigMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
@@ -34,7 +34,7 @@ python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProbl
 
 ################################################################################################
 #                                                                                              #
-#         REQUIRED CODE SNIPPET IN POSITIONSEARCHPROBLEM                                       #                                                                                    #
+#         REQUIRED CODE SNIPPET IN POSITIONSEARCHPROBLEM                                       #                                                                                    #											       #
 #        print("Found a food at",gameState.getFood().asList())                                 #
 #        for(x,y) in gameState.getFood().asList():                                             #
 #            self.goal = (x,y)                                                                 #
@@ -43,42 +43,42 @@ python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProbl
 #        if(self.goal == (1,1)):                                                               #
 #            self.goal = goal                                                                  #
 #                                                                                              #
-python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic --frameTime 0
-python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0
+python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic --frameTime 0 -q
+python pacman.py -l smallMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0 -q
 ################################################################################################
 
-python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=manhattanHeuristic -q
-python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,prob=FoodSearchProblem,heuristic=euclideanHeuristic -q
+python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic -q
+python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic -q
 
 # Hill Climb with no GUI
-python pacman.py -l bigMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
-python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem -q
+python pacman.py -l bigMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
+python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem -q
 
 # DFS with GUI
-python pacman.py -l bigMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0 -z .5
-python pacman.py -l contoursMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l mediumMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l openMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l smallMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l tinyMaze -p SearchAgent -a fn=dfs,prob=FoodSearchProblem --frameTime 0
+python pacman.py -l bigMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0 -z .5
+python pacman.py -l contoursMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l openMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l smallMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l tinyMaze -p SearchAgent -a fn=dfs,prob=PositionSearchProblem --frameTime 0
 
 # BFS with GUI
-python pacman.py -l bigMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0 -z .5
-python pacman.py -l contoursMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l openMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l smallMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l tinyMaze -p SearchAgent -a fn=bfs,prob=FoodSearchProblem --frameTime 0
+python pacman.py -l bigMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0 -z .5
+python pacman.py -l contoursMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l openMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l smallMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l tinyMaze -p SearchAgent -a fn=bfs,prob=PositionSearchProblem --frameTime 0
 
 # A* with GUI
 python pacman.py -l bigMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=manhattanHeuristic --frameTime 0 -z .5
@@ -95,7 +95,7 @@ python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProbl
 python pacman.py -l openMaze -p SearchAgent -a fn=astar,prob=PositionSearchProblem,heuristic=euclideanHeuristic --frameTime 0
 ################################################################################################
 #                                                                                              #
-#         REQUIRED CODE SNIPPET IN POSITIONSEARCHPROBLEM                                       #                                                                                    #
+#         REQUIRED CODE SNIPPET IN POSITIONSEARCHPROBLEM                                       #                                                                                    #											       #
 #        print("Found a food at",gameState.getFood().asList())                                 #
 #        for(x,y) in gameState.getFood().asList():                                             #
 #            self.goal = (x,y)                                                                 #
@@ -112,11 +112,11 @@ python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuri
 python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
 
 # Hill Climb with GUI
-python pacman.py -l bigMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0 -z .5
-python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
-python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,prob=FoodSearchProblem --frameTime 0
+python pacman.py -l bigMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0 -z .5
+python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
