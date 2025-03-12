@@ -113,10 +113,18 @@ python pacman.py -l tinyMaze -p SearchAgent -a fn=astar,heuristic=euclideanHeuri
 
 # Hill Climb with GUI
 python pacman.py -l bigMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0 -z .5
-python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
-python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
-python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
-python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
-python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
-python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
-python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l bigMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0 -z .5
+python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l contoursMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l contoursMaze2 -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l mediumScaryMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l openMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l smallMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,heuristic=manhattanHeuristic,prob=PositionSearchProblem --frameTime 0
+python pacman.py -l tinyMaze -p SearchAgent -a fn=hlclimb,heuristic=euclideanHeuristic,prob=PositionSearchProblem --frameTime 0

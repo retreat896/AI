@@ -153,8 +153,7 @@ class PositionSearchProblem(search.SearchProblem):
         goal: A position in the gameState
         """
 
-        #find the goal using gamestate.getFood
-# Current code sets goal from first food found but falls back to (1,1)
+        #find the first food and set the goal using gamestate.getFood
         for (x,y) in gameState.getFood().asList():
             self.goal = (x,y)
             print("Found a food at", self.goal)
@@ -168,7 +167,6 @@ class PositionSearchProblem(search.SearchProblem):
         self.visualize = visualize
         if warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal)):
             print('Warning: this does not look like a regular search maze')
-
 
         # For display purposes
         self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
