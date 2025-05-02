@@ -1,0 +1,34 @@
+1. Collision avoidance system[12]
+a) Algoritmos basados en visión para evitar colisiones
+
+1.- Preprocessing
+   a) Suavizado usando [20, 6]
+      1) Filtrado Gaussian
+      2) Filtrado Bilateral
+   b) Mejoramiento de las imágenes 
+      Edge enhancement usando el Filtro Laplaciano [15]
+   c) Baground Removal
+      Usign a series of Gaussian Mixture-based Background/Foreground
+      Segmentation Algorithm [25, 26, 10]
+
+2.- Blob Object System Improvement
+   a) En este caso se pueden usar Morphological Operations [3, 17] para rellenar los pixeles en los blobs.
+
+3.- Object Recognition
+   En este caso se podría usar:
+   a) Convolutional Neural Networks [11]
+   b) Support Vector Machine using Radial Kernels [7]
+   c) Logistic Regression + Linear Machines [21]
+
+
+
+
+[7] Marti A. Hearst, Susan T Dumais, Edgar Osuna, John Platt, and Bernhard
+Scholkopf. Support vector machines. IEEE Intelligent Systems and their
+applications, 13(4):18–28, 1998.
+
+[12] K. Prem Kumar, S. Jemima Evangelin, V. Amudharani, P. Inbavalli, R. Suganya,
+and U. Prabu. Survey on collision avoidance in vanet. In Proceedings
+of the 2015 International Conference on Advanced Research in Computer
+Science Engineering &#38; Technology (ICARCSET 2015), ICARCSET
+’15, pages 46:1–46:5, New York, NY, USA, 2015. ACM.
